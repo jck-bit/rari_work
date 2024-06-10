@@ -62,7 +62,7 @@ function GameCard(props: Props) {
               save Image <RiAddLine />
             </Button>
           }
-          Image Price
+          
         </div>
         <Button className="Name" handleClick={navigateToGame}>
           {""}

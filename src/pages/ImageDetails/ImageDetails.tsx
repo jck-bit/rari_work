@@ -24,6 +24,7 @@ function ImageDetails({ cartItems, addToCart }: Props) {
         const response = await fetch(`https://jsonplaceholder.typicode.com/photos/${id}`);
         const data = await response.json();
         setImage(data);
+        console.log(`This is the data ${data}`)
       } catch (error) {
         console.error('Error fetching image:', error);
       }
@@ -33,17 +34,24 @@ function ImageDetails({ cartItems, addToCart }: Props) {
   }, [id]);
 
   return (
-    <Transition className="ImageDetails" direction="left">
+    <Transition className="GameDetails" direction="left">
       <NavBar showStoreButton title={image?.title} />
       {image
-
+           
         ? <Transition className="Grid">
             <Carousel  duration={0}>
+              
             <div
                key={`img-${image.id}`}
                className='Image'
             >
-                <img src={image.thumbnailUrl}/>
+                <BackgroundImage
+                className="BackgroundImage"
+                wrapperClassName="Wrapper"
+                src={image.url}
+                isResponsive
+                lazyLoad
+                />                
             </div>
            </Carousel>
           <Info image={image} />

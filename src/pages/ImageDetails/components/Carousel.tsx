@@ -1,10 +1,7 @@
 import { Children, useRef, useState } from 'react';
 import { motion, PanInfo, useAnimation } from 'framer-motion';
 import { Button } from '../../../components';
-import {
-  RiArrowLeftSLine,
-  RiArrowRightSLine,
-} from 'react-icons/ri';
+import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
 import { useEffect } from 'react';
 
 interface Props {
