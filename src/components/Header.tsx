@@ -20,6 +20,7 @@ interface Props {
   setIsCartOpen: (isCartOpen: boolean) => void,
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function Header(props: Props) {
   const { cartItems, setIsCartOpen } = props;
   const navigate = useNavigate();
@@ -57,4 +58,5 @@ return (
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default memo(Header)
