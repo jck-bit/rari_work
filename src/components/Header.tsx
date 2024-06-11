@@ -49,7 +49,7 @@ return (
           handleClick={openCart}
         >
           <RiShoppingBag2Line />
-          Cart
+          Images
           <div>{cartItems.length}</div>
         </Button>
 
