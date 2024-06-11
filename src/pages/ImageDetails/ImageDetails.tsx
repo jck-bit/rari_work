@@ -5,7 +5,7 @@ import { BackgroundImage } from 'react-image-and-background-image-fade';
 import Info from './components/Info';
 import { Image } from '../../types/Image.types';
 import NavBar from '../../components/Navbar';
-import { RiAddLine, RiCheckLine } from 'react-icons/ri';
+import { RiAddLine, RiCheckLine, RiDeleteBin2Fill } from 'react-icons/ri';
 import Carousel from './components/Carousel';
 
 interface Props {
@@ -55,7 +55,6 @@ function ImageDetails({ cartItems, addToCart }: Props) {
            </Carousel>
           <Info image={image} />
           <div className="Price">
-            ${image.id}
             {cartItems.find((item) => item.id === id)
               ? <Transition className="Added">
                 Added <RiCheckLine />
@@ -64,6 +63,11 @@ function ImageDetails({ cartItems, addToCart }: Props) {
                save image <RiAddLine />
               </Button>
             }
+            <div className='Delete'>
+              <Button type="delete" className='Delete'>
+                Delete Image <RiDeleteBin2Fill/>
+              </Button>
+            </div>
           </div>
         </Transition>
         : <Loading />
