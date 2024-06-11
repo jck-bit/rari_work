@@ -42,7 +42,7 @@ function Cart(props: Props) {
   } else if (cartItems.length === 1) {
     gamesCount = '1 Image';
   } else {
-    gamesCount = 'No Images added';
+    gamesCount = 'No Images saved';
   }
 //   const totalPrice = cartItems
 //     .reduce((acc, item) => acc + item.price, 0)

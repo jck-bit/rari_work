@@ -52,10 +52,6 @@ return (
           Images
           <div>{cartItems.length}</div>
         </Button>
-
-        <Button>
-            
-        </Button>
       </Transition>
     </Headroom>
   );
