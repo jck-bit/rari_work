@@ -242,6 +242,16 @@
         color: lightgreen;
         user-select: none;
       }
+
+      .Delete {
+        .Button{
+          color: colors.$text2;
+
+          &:hover{
+            color: colors.$delete;
+          }
+        }
+      }
     }
   }
 }

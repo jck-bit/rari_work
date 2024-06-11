@@ -85,7 +85,7 @@ function Cart(props: Props) {
         </div>
         <div className="Checkout">
           {/* <div>Total: ${+totalPrice}</div> */}
-          <Button handleClick={handleCheckout}>save Image <RiArrowRightLine /></Button>
+          <Button handleClick={handleCheckout}>Download Images <RiArrowRightLine /></Button>
         </div>
       </motion.div>
     </>

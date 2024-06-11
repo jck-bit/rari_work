@@ -5,7 +5,7 @@ import { BackgroundImage } from 'react-image-and-background-image-fade';
 import Info from './components/Info';
 import { Image } from '../../types/Image.types';
 import NavBar from '../../components/Navbar';
-import { RiAddLine, RiCheckLine } from 'react-icons/ri';
+import { RiAddLine, RiCheckLine, RiDeleteBin2Fill } from 'react-icons/ri';
 import Carousel from './components/Carousel';
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
 function ImageDetails({ cartItems, addToCart }: Props) {
   const { ImageId } = useParams();
   const id = Number(ImageId);
-  const [image, setImage] = useState<Image | null>(null);
+  const [image, setImage] = useState<Image>();
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -36,8 +36,7 @@ function ImageDetails({ cartItems, addToCart }: Props) {
   return (
     <Transition className="GameDetails" direction="left">
       <NavBar showStoreButton title={image?.title} />
-      {image
-           
+      {image 
         ? <Transition className="Grid">
             <Carousel  duration={0}>
               
@@ -45,29 +44,32 @@ function ImageDetails({ cartItems, addToCart }: Props) {
                key={`img-${image.id}`}
                className='Image'
             >
-                <BackgroundImage
-                className="BackgroundImage"
-                wrapperClassName="Wrapper"
-                src={image.url}
-                isResponsive
-                lazyLoad
-                />                
+              <BackgroundImage 
+                className="BackgroundImage"  
+                wrapperClassName="Wrapper" 
+                transitionTime="1s"  
+                isResponsive 
+                lazyLoad/>
+                              
             </div>
            </Carousel>
           <Info image={image} />
           <div className="Price">
-            ${image.id}
             {cartItems.find((item) => item.id === id)
               ? <Transition className="Added">
                 Added <RiCheckLine />
               </Transition>
               : <Button handleClick={() => addToCart(image)}>
-                Add to cart <RiAddLine />
+               save image <RiAddLine />
               </Button>
             }
+            <div className='Delete'>
+              <Button type="delete" className='Delete'>
+                Delete Image <RiDeleteBin2Fill/>
+              </Button>
+            </div>
           </div>
         </Transition>
-        
         : <Loading />
       }
     </Transition>
