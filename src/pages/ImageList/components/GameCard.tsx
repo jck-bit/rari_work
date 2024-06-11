@@ -4,6 +4,7 @@ import { BackgroundImage } from 'react-image-and-background-image-fade';
 import {
   RiAddLine,
   RiCheckLine,
+  RiDeleteBin2Fill
 } from 'react-icons/ri';
 import { Transition, Button } from '../../../components';
 import { useNavigate } from 'react-router-dom';
@@ -62,7 +63,11 @@ function GameCard(props: Props) {
               save Image <RiAddLine />
             </Button>
           }
-          
+          <div className='Delete'>
+            <Button type="delete" className='Delete'>
+              Delete Image <RiDeleteBin2Fill/>
+            </Button>
+          </div>
         </div>
         <Button className="Name" handleClick={navigateToGame}>
           {""}

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 interface Props {
   children: React.ReactNode;
   className?: string;
-  type?: 'button' | 'submit' | 'reset';
+  type?: 'button' | 'submit' | 'reset'| 'delete';
   title?: string;
   handleClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }

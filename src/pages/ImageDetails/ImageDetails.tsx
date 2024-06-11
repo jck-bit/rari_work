@@ -16,7 +16,7 @@ interface Props {
 function ImageDetails({ cartItems, addToCart }: Props) {
   const { ImageId } = useParams();
   const id = Number(ImageId);
-  const [image, setImage] = useState<Image | null>(null);
+  const [image, setImage] = useState<Image>();
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -36,8 +36,7 @@ function ImageDetails({ cartItems, addToCart }: Props) {
   return (
     <Transition className="GameDetails" direction="left">
       <NavBar showStoreButton title={image?.title} />
-      {image
-           
+      {image 
         ? <Transition className="Grid">
             <Carousel  duration={0}>
               
@@ -45,13 +44,13 @@ function ImageDetails({ cartItems, addToCart }: Props) {
                key={`img-${image.id}`}
                className='Image'
             >
-                <BackgroundImage
-                className="BackgroundImage"
-                wrapperClassName="Wrapper"
-                src={image.url}
-                isResponsive
-                lazyLoad
-                />                
+              <BackgroundImage 
+                className="BackgroundImage"  
+                wrapperClassName="Wrapper" 
+                transitionTime="1s"  
+                isResponsive 
+                lazyLoad/>
+                              
             </div>
            </Carousel>
           <Info image={image} />
@@ -62,12 +61,11 @@ function ImageDetails({ cartItems, addToCart }: Props) {
                 Added <RiCheckLine />
               </Transition>
               : <Button handleClick={() => addToCart(image)}>
-                Add to cart <RiAddLine />
+               save image <RiAddLine />
               </Button>
             }
           </div>
         </Transition>
-        
         : <Loading />
       }
     </Transition>
