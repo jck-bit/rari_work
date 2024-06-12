@@ -6,6 +6,7 @@ import {
   Transition,
   Button,
   Loading,
+  Footer,
 } from '../../components';
 import FlowCard from './Components/FlowCard';
 
@@ -90,6 +91,7 @@ function Home() {
       ) : (
         <Loading />
       )}
+      <Footer/>
     </Transition>
   );
 }
