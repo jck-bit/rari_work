@@ -8,6 +8,7 @@ import { Image } from './types/Image.types';
 import ImageDetails from './pages/ImageDetails/ImageDetails';
 import { AnimatePresence } from 'framer-motion';
 import Cart from './components/Cart';
+import { Container } from 'react-bootstrap';
 
 function App() {
   const location = useLocation();
@@ -21,7 +22,8 @@ function App() {
     setCartItems(cartItems.filter((item) => !ids.includes(item.id)));
   }, [cartItems]);
   return (
-    <div className='App'>
+  <Container>
+   <div className='App'>
     <Header  cartItems={cartItems} setIsCartOpen={setIsCartOpen}/>
     <AnimatePresence exitBeforeEnter>
         {isCartOpen && (
@@ -62,7 +64,8 @@ function App() {
           </Route>
         
     </Routes>
-    </div>
+  </div>
+  </Container>
   )
 }
 
