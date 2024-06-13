@@ -38,11 +38,11 @@ $grid-gap: clamp(15px, 2.5vw, 25px);
 .GameCard {
   background-color: colors.$bg2;
   color: colors.$text;
-  border-radius: 15px;
+  border-radius: 5px;
   overflow: hidden;
 
   .Image {
-    height: 140px;
+    height: 280px;
     cursor: pointer;
   }
 

@@ -37,7 +37,7 @@ function GameCard(props: Props) {
     <div className="GameCard">
       <motion.div
         className="Image"
-        whileHover={{ height: 180 }}
+      //  whileHover={{ height: 180 }}
         onClick={navigateToGame}
       >
         
