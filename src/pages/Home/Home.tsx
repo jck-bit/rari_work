@@ -9,15 +9,8 @@ import {
   Footer,
 } from '../../components';
 import FlowCard from './Components/FlowCard';
+import { Image } from '../../types/Image.types';
 
-
-interface Photo {
-  albumId: number;
-  id: number;
-  title: string;
-  url: string;
-  thumbnailUrl: string;
-}
 
 const cardDuration = 10;
 const cycleArray = (array: unknown[]) => {
@@ -35,7 +28,7 @@ const getRandomItems = (items: unknown[], length: number) => {
 };
 
 function Home() {
-  const [photos, setPhotos] = useState<Photo[]>();
+  const [photos, setPhotos] = useState<Image[]>();
   const scrollTo = useScrollTo();
   const navigate = useNavigate();
   const navigateToStore = () => navigate('/images');
@@ -43,10 +36,10 @@ function Home() {
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
-        const loadPhotos = await fetch('https://jsonplaceholder.typicode.com/photos/');
+        const loadPhotos = await fetch('https://rari-express.vercel.app/images');
         const response = await loadPhotos.json();
         console.log(response);
-        const photos = getRandomItems(response, 4) as Photo[];
+        const photos = getRandomItems(response, 4) as Image[];
         setPhotos(photos);
       } catch (error) {
         console.error('Error fetching photos:', error);
@@ -60,7 +53,7 @@ function Home() {
     let interval: NodeJS.Timer | number;
     if (photos) {
       interval = setInterval(() => {
-        setPhotos(photos => cycleArray(photos as Photo[]) as Photo[]);
+        setPhotos(photos => cycleArray(photos as Image[]) as Image[]);
       }, cardDuration * 1000);
     }
     scrollTo();
@@ -71,12 +64,12 @@ function Home() {
     <Transition className="Home" direction="left">
       {photos ? (
         <Transition className="Grid">
-          {photos.map(({id, title, url}, i) =>(
+          {photos.map(({id, name, image_url}, i) =>(
             <FlowCard
             key={id}
             id={id}
-            name={title}
-            backgroundImage={url}
+            name={name}
+            backgroundImage={image_url}
             duration={cardDuration}
             big={i === 0}
             />

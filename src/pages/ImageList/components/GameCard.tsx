@@ -26,7 +26,7 @@ function GameCard(props: Props) {
   const {
     id,
     
-    url
+    image_url
   } = image;
   
   const [isHovered, setIsHovered] = useState(false);
@@ -44,7 +44,7 @@ function GameCard(props: Props) {
         <BackgroundImage
           className="BackgroundImage"
           wrapperClassName="Wrapper"
-          src={url || ''}
+          src={image_url || ''}
           transitionTime="1s"
           isResponsive
           lazyLoad
@@ -69,22 +69,13 @@ function GameCard(props: Props) {
             </Button>
           </div>
         </div>
-        <Button className="Name" handleClick={navigateToGame}>
-          {""}
-        </Button>
+        
         <AnimatePresence>
           {isHovered && (
-            <Transition className="MoreInfo">
-              {/* {parent_platforms && <div className="Platforms">
-                {parent_platforms.map(({ platform }) => (
-                  <div key={`${platform.id}-${id}`} title={platform.name}>
-                    {platformIcons[platform.slug]}
-                  </div>
-                ))}
-              </div>} */}
-              {/* <div className="Released">Released: {releasedDate}</div>
-              <div className="Genres">Genres: {genreList}</div> */}
-              <div>Image prompt will come here</div>
+            <Transition className="">
+              
+                            
+              <div>{image.prompt}</div>
             </Transition>
           )}
         </AnimatePresence>
