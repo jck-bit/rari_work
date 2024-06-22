@@ -36,7 +36,7 @@ function ImageList({ cartItems, addToCart }: Props) {
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
-        const loadPhotos = await fetch('https://jsonplaceholder.typicode.com/photos/');
+        const loadPhotos = await fetch('https://rari-express.vercel.app/images');
         const response = await loadPhotos.json();
         console.log('Fetched photos:', response);
         const photos = response.slice(0, 50) as Image[];

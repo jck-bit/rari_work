@@ -1,10 +1,10 @@
 interface Image {
-  albumId: number;
+  name:"string"
   id: number;
-  title: string;
-  url: string;
-  thumbnailUrl: string;
-    
+  prompt: string;
+  negative_prompt:"string"
+  date_created:"string"
+  image_url: string;
   }
   
   export type { Image };
