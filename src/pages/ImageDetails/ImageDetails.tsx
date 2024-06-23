@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button, Loading, Transition } from '../../components';
-import { BackgroundImage } from 'react-image-and-background-image-fade';
+import { Container } from 'react-bootstrap';
 import Info from './components/Info';
 import { Image } from '../../types/Image.types';
 import NavBar from '../../components/Navbar';
@@ -38,37 +38,25 @@ function ImageDetails({ cartItems, addToCart }: Props) {
   
 
   return (
+    <Container>
     <Transition className="GameDetails" direction="left">
       <NavBar showStoreButton title={''} />
       {image ? (
         <Transition className="Grid">
+          <Container>
           <Carousel duration={0}>
             <div key={`img-${image.id}`} className='Image'>
-              <img src={image.image_url} className='BackgroundImage'/>
+              <img src={image.image_url} alt='' className='BackgroundImage'/>
             </div>
           </Carousel>
           <Info image={image} />
-          <div className="Price">
-            {cartItems.find((item) => item.id === id) ? (
-              <Transition className="Added">
-                Added <RiCheckLine />
-              </Transition>
-            ) : (
-              <Button handleClick={() => addToCart(image)} className="SaveButton">
-                Save Image <RiAddLine />
-              </Button>
-            )}
-            <div className='DeleteButton'>
-              <Button type="delete" className='DeleteButton'>
-                Delete Image <RiDeleteBin2Fill/>
-              </Button>
-            </div>
-          </div>
+          </Container>
         </Transition>
       ) : (
         <Loading />
       )}
     </Transition>
+    </Container>
   );
 }
 

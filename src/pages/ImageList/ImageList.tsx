@@ -1,3 +1,4 @@
+// src/components/ImageList/ImageList.tsx
 import { useEffect, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { useIsPresent } from 'framer-motion';
@@ -5,8 +6,9 @@ import { useScrollTo } from 'framer-motion-scroll-to-hook';
 import { useWindowWidth } from '@react-hook/window-size';
 import { Transition, Loading } from '../../components';
 import Grid from './components/Grid';
-import { Image } from '../../types/Image.types';
 import NavBar from '../../components/Navbar';
+import { useImages } from '../../context/ImageContext';
+import { Image } from '../../types/Image.types';
 
 interface Props {
   cartItems: Image[];
@@ -17,7 +19,7 @@ const minCardWidth = 330;
 let scrollY = 0;
 
 function ImageList({ cartItems, addToCart }: Props) {
-  const [images, setImages] = useState<Image[] | null>(null);
+  const { images } = useImages(); // Get images from context
   const [columnsCount, setColumnsCount] = useState(1);
   const windowWidth = useWindowWidth();
   const [searchParams] = useSearchParams();
@@ -34,32 +36,15 @@ function ImageList({ cartItems, addToCart }: Props) {
   }, [isPresent]);
 
   useEffect(() => {
-    const fetchPhotos = async () => {
-      try {
-        const loadPhotos = await fetch('https://rari-express.vercel.app/images');
-        const response = await loadPhotos.json();
-        console.log('Fetched photos:', response);
-        const photos = response.slice(0, 200) as Image[];
-        console.log('Selected photos:', photos);
-        setImages(photos);
-      } catch (error) {
-        console.error('Error fetching photos:', error);
-      }
-    };
-
     if (location.pathname === '/images') {
       if (location.search) {
         ({ scrollY } = window);
         scrollTo();
-        fetchPhotos();
       } else {
         scrollTo(scrollY);
-        fetchPhotos();
       }
     }
-  }, []);
-
-  //console.log('Images state:', images);
+  }, [location, scrollTo]);
 
   return (
     <Transition className="GameList" direction="right">

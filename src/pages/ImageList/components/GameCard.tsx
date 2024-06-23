@@ -1,15 +1,12 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+// src/components/GameCard/GameCard.tsx
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { BackgroundImage } from 'react-image-and-background-image-fade';
-import {
-  RiAddLine,
-  RiCheckLine,
-  RiDeleteBin2Fill
-} from 'react-icons/ri';
+import { RiAddLine, RiCheckLine, RiDeleteBin2Fill } from 'react-icons/ri';
 import { Transition, Button } from '../../../components';
 import { useNavigate } from 'react-router-dom';
 import { Image } from '../../../types/Image.types';
-
+import { useImages } from '../../../context/ImageContext';
 
 interface Props {
   image: Image;
@@ -17,18 +14,9 @@ interface Props {
   addToCart: (game: Image) => void;
 }
 
-function GameCard(props: Props) {
-  const {
-    image,
-    cartItems,
-    addToCart,
-  } = props;
-  const {
-    id,
-    
-    image_url
-  } = image;
-  
+const GameCard: React.FC<Props> = ({ image, cartItems, addToCart }) => {
+  const { id, image_url } = image;
+  const { deleteImage } = useImages();
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   const navigateToGame = () => navigate(`/images/${id}`);
@@ -37,10 +25,8 @@ function GameCard(props: Props) {
     <div className="GameCard">
       <motion.div
         className="Image"
-      //  whileHover={{ height: 180 }}
         onClick={navigateToGame}
       >
-        
         <BackgroundImage
           className="BackgroundImage"
           wrapperClassName="Wrapper"
@@ -52,7 +38,6 @@ function GameCard(props: Props) {
       </motion.div>
       <motion.div
         className="Info"
-        whileHover={{ height: 150 }}
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
       >
@@ -60,25 +45,15 @@ function GameCard(props: Props) {
           {cartItems.find((item) => item.id === id)
             ? <Transition className="Added">Saved <RiCheckLine /></Transition>
             : <Button handleClick={() => addToCart(image)}>
-              save Image <RiAddLine />
+              Save Image <RiAddLine />
             </Button>
           }
           <div className='Delete'>
-            <Button type="delete" className='Delete'>
-              Delete Image <RiDeleteBin2Fill/>
+            <Button type="button" className='Delete' handleClick={() => deleteImage(image.id)}>
+              Delete Image <RiDeleteBin2Fill />
             </Button>
           </div>
         </div>
-        
-        <AnimatePresence>
-          {isHovered && (
-            <Transition className="MoreInfo">  
-              <div>
-                <Button handleClick={navigateToGame}>View Image Prompt</Button>
-              </div>
-            </Transition>
-          )}
-        </AnimatePresence>
       </motion.div>
     </div>
   );
