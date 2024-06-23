@@ -17,11 +17,12 @@ function Info({ image }: { image: Image }) {
       <div className="About">
         <h4>About</h4>
         <p>Title: {name}</p>
+        <p>Prompt:{prompt}</p>
       </div>
       <motion.div
         className="MoreInfo"
         initial={false}
-        animate={{ minHeight: isExpanded ? '220px' : '60px' }}
+        animate={{ minHeight: isExpanded ? '320px' : '60px' }}
       >
         {isExpanded ? (
           <>
@@ -33,10 +34,7 @@ function Info({ image }: { image: Image }) {
             >
               <a href={image_url} target="_blank" rel="noreferrer">
                 View Image
-              </a>
-              <p>Title: {image.name}</p>
-
-              <p>Prompt:{prompt}</p>
+              </a>             
               <p>Negative prompt: {negative_prompt}</p>
               
               <p>Date Created: {formatted_date}</p>

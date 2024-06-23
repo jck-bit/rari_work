@@ -39,7 +39,7 @@ function ImageDetails({ cartItems, addToCart }: Props) {
 
   return (
     <Transition className="GameDetails" direction="left">
-      <NavBar showStoreButton title={image?.name ?? 'Loading...'} />
+      <NavBar showStoreButton title={''} />
       {image ? (
         <Transition className="Grid">
           <Carousel duration={0}>
