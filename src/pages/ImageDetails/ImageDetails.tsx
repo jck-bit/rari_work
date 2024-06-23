@@ -21,7 +21,10 @@ function ImageDetails({ cartItems, addToCart }: Props) {
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const response = await fetch(`https://jsonplaceholder.typicode.com/photos/${id}`);
+        const response = await fetch(`https://rari-express.vercel.app/images/${id}`);
+        if (!response.ok) {
+          throw new Error('Image not found');
+        }
         const data = await response.json();
         setImage(data);
         console.log(`This is the data ${data}`)
@@ -35,7 +38,7 @@ function ImageDetails({ cartItems, addToCart }: Props) {
 
   return (
     <Transition className="GameDetails" direction="left">
-      <NavBar showStoreButton title={image?.title} />
+      <NavBar showStoreButton title={image?.name} />
       {image 
         ? <Transition className="Grid">
             <Carousel  duration={0}>
@@ -45,12 +48,14 @@ function ImageDetails({ cartItems, addToCart }: Props) {
                className='Image'
             >
               <BackgroundImage 
-                className="BackgroundImage"  
+                className="BackgroundImage"
                 wrapperClassName="Wrapper" 
                 transitionTime="1s"  
                 isResponsive 
-                lazyLoad/>
-                              
+                src={image.image_url}
+                lazyLoad
+                />
+              
             </div>
            </Carousel>
           <Info image={image} />

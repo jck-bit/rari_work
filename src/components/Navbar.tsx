@@ -12,7 +12,7 @@ interface Props {
 function NavBar(props: Props) {
   const { showStoreButton, title } = props;
   const navigate = useNavigate();
-  const navigateToStore = () => navigate('/images');
+  const navigateToStore = () => navigate('/');
 
   return (
     <nav className="NavBar">
