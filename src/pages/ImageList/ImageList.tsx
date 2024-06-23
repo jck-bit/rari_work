@@ -39,7 +39,7 @@ function ImageList({ cartItems, addToCart }: Props) {
         const loadPhotos = await fetch('https://rari-express.vercel.app/images');
         const response = await loadPhotos.json();
         console.log('Fetched photos:', response);
-        const photos = response.slice(0, 50) as Image[];
+        const photos = response.slice(0, 200) as Image[];
         console.log('Selected photos:', photos);
         setImages(photos);
       } catch (error) {
@@ -59,13 +59,13 @@ function ImageList({ cartItems, addToCart }: Props) {
     }
   }, []);
 
-  console.log('Images state:', images);
+  //console.log('Images state:', images);
 
   return (
     <Transition className="GameList" direction="right">
       <NavBar
         showStoreButton={!!location.search}
-        title={searchParams.get('search') || 'Images Available'}
+        title={searchParams.get('search') || ''}
       />
       {images
         ? images.length
