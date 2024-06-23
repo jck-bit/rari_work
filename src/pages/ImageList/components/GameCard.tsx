@@ -1,4 +1,3 @@
-// src/components/GameCard/GameCard.tsx
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BackgroundImage } from 'react-image-and-background-image-fade';
@@ -6,18 +5,17 @@ import { RiAddLine, RiCheckLine, RiDeleteBin2Fill } from 'react-icons/ri';
 import { Transition, Button } from '../../../components';
 import { useNavigate } from 'react-router-dom';
 import { Image } from '../../../types/Image.types';
-import { useImages } from '../../../context/ImageContext';
 
 interface Props {
   image: Image;
   cartItems: Image[];
-  addToCart: (game: Image) => void;
+  addToCart: (image: Image) => void;
+  handleDeleteImage: (id: number) => void; // Add this prop
 }
 
-const GameCard: React.FC<Props> = ({ image, cartItems, addToCart }) => {
+const GameCard: React.FC<Props> = ({ image, cartItems, addToCart, handleDeleteImage }) => {
   const { id, image_url } = image;
-  const { deleteImage } = useImages();
-  const [isHovered, setIsHovered] = useState(false);
+  const [, setIsHovered] = useState(false);
   const navigate = useNavigate();
   const navigateToGame = () => navigate(`/images/${id}`);
 
@@ -49,7 +47,7 @@ const GameCard: React.FC<Props> = ({ image, cartItems, addToCart }) => {
             </Button>
           }
           <div className='Delete'>
-            <Button type="button" className='Delete' handleClick={() => deleteImage(image.id)}>
+            <Button type="button" className='Delete' handleClick={() => handleDeleteImage(id)}>
               Delete Image <RiDeleteBin2Fill />
             </Button>
           </div>

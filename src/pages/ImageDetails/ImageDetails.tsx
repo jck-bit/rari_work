@@ -43,15 +43,16 @@ function ImageDetails({ cartItems, addToCart }: Props) {
       <NavBar showStoreButton title={''} />
       {image ? (
         <Transition className="Grid">
-          <Container>
+          
           <Carousel duration={0}>
             <div key={`img-${image.id}`} className='Image'>
               <img src={image.image_url} alt='' className='BackgroundImage'/>
             </div>
           </Carousel>
           <Info image={image} />
-          </Container>
+          
         </Transition>
+        
       ) : (
         <Loading />
       )}
