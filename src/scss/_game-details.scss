@@ -121,7 +121,7 @@
 
       .About {
         @include bottom-gradient(colors.$bg2);
-        max-height: 300px;
+        max-height: 550px;
         padding: 30px;
         padding-bottom: 0;
         position: relative;
@@ -268,7 +268,7 @@
 
     .Info {
       .About {
-        max-height: 220px;
+        min-height: 20px;
       }
     }
 
