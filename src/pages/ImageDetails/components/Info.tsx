@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useScrollTo } from 'framer-motion-scroll-to-hook';
 //import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
-import { Transition, Button } from '../../../components';
+import { Transition } from '../../../components';
 import { Image } from '../../../types/Image.types';
 
 function Info({ image }: { image: Image }) {
   const { name,  negative_prompt ,date_created, prompt} = image;
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded] = useState(false);
  // const scrollTo = useScrollTo();
 
   const date = new Date(date_created)

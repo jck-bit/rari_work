@@ -1,5 +1,4 @@
-// src/components/ImageList/ImageList.tsx
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { useIsPresent } from 'framer-motion';
 import { useScrollTo } from 'framer-motion-scroll-to-hook';
@@ -19,7 +18,7 @@ const minCardWidth = 330;
 let scrollY = 0;
 
 function ImageList({ cartItems, addToCart }: Props) {
-  const { images } = useImages(); // Get images from context
+  const { images, deleteImage } = useImages(); // Get images from context
   const [columnsCount, setColumnsCount] = useState(1);
   const windowWidth = useWindowWidth();
   const [searchParams] = useSearchParams();
@@ -32,19 +31,36 @@ function ImageList({ cartItems, addToCart }: Props) {
   }, [windowWidth]);
 
   useEffect(() => {
-    !isPresent && ({ scrollY } = window);
+    if (!isPresent) {
+      scrollY = window.scrollY;
+    }
   }, [isPresent]);
+
+  const handleDeleteImage = useCallback(
+    async (id: number) => {
+      scrollY = window.scrollY;
+      await deleteImage(id);
+      // Scroll to the saved position after deleting the image
+      window.scrollTo(0, scrollY);
+    },
+    [deleteImage]
+  );
 
   useEffect(() => {
     if (location.pathname === '/images') {
       if (location.search) {
-        ({ scrollY } = window);
+        scrollY = window.scrollY;
         scrollTo();
       } else {
         scrollTo(scrollY);
       }
     }
   }, [location, scrollTo]);
+
+  // Additional useEffect to restore scroll position after state changes
+  useEffect(() => {
+    window.scrollTo(0, scrollY);
+  }, [images]);
 
   return (
     <Transition className="GameList" direction="right">
@@ -59,6 +75,7 @@ function ImageList({ cartItems, addToCart }: Props) {
               cartItems={cartItems}
               addToCart={addToCart}
               columnsCount={columnsCount}
+              handleDeleteImage={handleDeleteImage} // Pass this prop
             />
           : <Transition className="NoGames">No Images found.</Transition>
         : <Loading />
