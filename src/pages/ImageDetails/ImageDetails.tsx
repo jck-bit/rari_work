@@ -14,9 +14,9 @@ interface Props {
 }
 
 function ImageDetails({ cartItems, addToCart }: Props) {
-  const { ImageId } = useParams();
+  const { ImageId } = useParams<{ ImageId: string }>();
   const id = Number(ImageId);
-  const [image, setImage] = useState<Image>();
+  const [image, setImage] = useState<Image | undefined>();
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -27,7 +27,7 @@ function ImageDetails({ cartItems, addToCart }: Props) {
         }
         const data = await response.json();
         setImage(data);
-        console.log(`This is the data ${data}`)
+        console.log('Fetched image:', data);
       } catch (error) {
         console.error('Error fetching image:', error);
       }
@@ -35,48 +35,39 @@ function ImageDetails({ cartItems, addToCart }: Props) {
 
     fetchImage();
   }, [id]);
+  
 
   return (
     <Transition className="GameDetails" direction="left">
-      <NavBar showStoreButton title={image?.name} />
-      {image 
-        ? <Transition className="Grid">
-            <Carousel  duration={0}>
-              
-            <div
-               key={`img-${image.id}`}
-               className='Image'
-            >
-              <BackgroundImage 
-                className="BackgroundImage"
-                wrapperClassName="Wrapper" 
-                transitionTime="1s"  
-                isResponsive 
-                src={image.image_url}
-                lazyLoad
-                />
-              
+      <NavBar showStoreButton title={image?.name ?? 'Loading...'} />
+      {image ? (
+        <Transition className="Grid">
+          <Carousel duration={0}>
+            <div key={`img-${image.id}`} className='Image'>
+              <img src={image.image_url} className='BackgroundImage'/>
             </div>
-           </Carousel>
+          </Carousel>
           <Info image={image} />
           <div className="Price">
-            {cartItems.find((item) => item.id === id)
-              ? <Transition className="Added">
+            {cartItems.find((item) => item.id === id) ? (
+              <Transition className="Added">
                 Added <RiCheckLine />
               </Transition>
-              : <Button handleClick={() => addToCart(image)}>
-               save image <RiAddLine />
+            ) : (
+              <Button handleClick={() => addToCart(image)} className="SaveButton">
+                Save Image <RiAddLine />
               </Button>
-            }
-            <div className='Delete'>
-              <Button type="delete" className='Delete'>
+            )}
+            <div className='DeleteButton'>
+              <Button type="delete" className='DeleteButton'>
                 Delete Image <RiDeleteBin2Fill/>
               </Button>
             </div>
           </div>
         </Transition>
-        : <Loading />
-      }
+      ) : (
+        <Loading />
+      )}
     </Transition>
   );
 }
