@@ -12,7 +12,7 @@ interface Props {
 
 function CartItem(props: Props) {
   const { image, closeCart, removeFromCart } = props;
-  const { id, title } = image;
+  const { id, name } = image;
   const navigate = useNavigate();
   const navigateToGame = () => {
     navigate(`/images/${id}`);
@@ -29,7 +29,7 @@ function CartItem(props: Props) {
       durationOut={0.15}
     >
       <Button handleClick={navigateToGame}>
-        {title}
+        {name}
       </Button>
       {/* ${price} */}
       <Button

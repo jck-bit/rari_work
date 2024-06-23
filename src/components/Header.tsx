@@ -42,7 +42,7 @@ return (
           className="Logo"
            handleClick={navigateToHome}
         >
-          <h4>Home</h4>
+          <h4>Welcome</h4>
         </Button>
         <SearchBar />
         <Button

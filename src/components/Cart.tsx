@@ -81,10 +81,11 @@ function Cart(props: Props) {
                 closeCart={closeCart}
                 removeFromCart={removeFromCart} />
             ))}
+            
           </AnimatePresence>
+          
         </div>
         <div className="Checkout">
-          {/* <div>Total: ${+totalPrice}</div> */}
           <Button handleClick={handleCheckout}>Download Images <RiArrowRightLine /></Button>
         </div>
       </motion.div>

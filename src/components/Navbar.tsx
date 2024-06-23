@@ -22,7 +22,7 @@ function NavBar(props: Props) {
             className="Store"
             handleClick={navigateToStore}
           >
-            <RiArrowLeftLine /> Menu
+            <RiArrowLeftLine /> Home
           </Button>
         </Transition>
       )}

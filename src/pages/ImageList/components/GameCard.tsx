@@ -52,7 +52,7 @@ function GameCard(props: Props) {
       </motion.div>
       <motion.div
         className="Info"
-        whileHover={{ height: 180 }}
+        whileHover={{ height: 150 }}
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
       >
@@ -69,16 +69,13 @@ function GameCard(props: Props) {
             </Button>
           </div>
         </div>
-
-        <div className='Name'>
-          
-        </div>
+        
         <AnimatePresence>
           {isHovered && (
-            <Transition className="">
-              
-                            
-              <div>{image.prompt}</div>
+            <Transition className="MoreInfo">  
+              <div>
+                <Button handleClick={navigateToGame}>View Image Prompt</Button>
+              </div>
             </Transition>
           )}
         </AnimatePresence>

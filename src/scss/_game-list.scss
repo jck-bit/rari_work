@@ -59,7 +59,7 @@ $grid-gap: clamp(15px, 2.5vw, 25px);
 
     .Price {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
 
       font: {
