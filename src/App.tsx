@@ -1,5 +1,5 @@
 import './scss/App.scss'
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Header } from './components'
 import { Home, NotFound } from './pages';
 import ImageList from './pages/ImageList/ImageList';
@@ -38,7 +38,10 @@ function App() {
     <Routes location={location} key={location.pathname}>
       <Route path='*' element={<NotFound/>}/>
 
-      <Route path='/' element ={<Home />}/>
+      <Route
+            path='/'
+            element={<Navigate to='/images' replace />}
+          />
 
       <Route path="images">
             <Route
