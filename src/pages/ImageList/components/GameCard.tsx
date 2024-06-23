@@ -69,7 +69,10 @@ function GameCard(props: Props) {
             </Button>
           </div>
         </div>
-        
+
+        <div className='Name'>
+          
+        </div>
         <AnimatePresence>
           {isHovered && (
             <Transition className="">
