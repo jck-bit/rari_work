@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Loading, Transition } from '../../components';
-import { Container } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap'; // Import Row and Col from react-bootstrap
 import Info from './components/Info';
 import { Image } from '../../types/Image.types';
 import NavBar from '../../components/Navbar';
@@ -32,13 +32,19 @@ const ImageDetails: React.FC = () => {
       <Transition className="GameDetails" direction="left">
         <NavBar showStoreButton title={''} />
         {image ? (
-          <Transition className="Grid">
-            <Carousel duration={0}>
-              <div key={`img-${image.id}`} className='Image'>
-                <img src={image.image_url} alt='' className='BackgroundImage' />
-              </div>
-            </Carousel>
-            <Info image={image} />
+          <Transition>
+            <Row className="align-items-center">
+              <Col md={6} className="mb-4 mb-md-0">
+                <Carousel duration={0}>
+                  <div key={`img-${image.id}`} className="Image">
+                    <img src={image.image_url} alt="" className="img-fluid" />
+                  </div>
+                </Carousel>
+              </Col>
+              <Col md={6}>
+                <Info image={image} />
+              </Col>
+            </Row>
           </Transition>
         ) : (
           <Loading />
@@ -46,6 +52,6 @@ const ImageDetails: React.FC = () => {
       </Transition>
     </Container>
   );
-}
+};
 
 export default ImageDetails;
