@@ -5,8 +5,6 @@ import SearchBar from './SearchBar';
 import Transition from './Transition';
 import Button from './Button';
 
-
-
 // eslint-disable-next-line react-refresh/only-export-components
 function Header() {
   
