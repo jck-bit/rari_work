@@ -1,75 +1,62 @@
-import './scss/App.scss'
+
+import './scss/App.scss';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
-import { Header } from './components'
-import { Home, NotFound } from './pages';
+import { Header } from './components';
+import { NotFound } from './pages';
 import ImageList from './pages/ImageList/ImageList';
-import { useCallback, useState } from 'react';
-import { Image } from './types/Image.types';
 import ImageDetails from './pages/ImageDetails/ImageDetails';
-import { AnimatePresence } from 'framer-motion';
-import Cart from './components/Cart';
-import { Container } from 'react-bootstrap';
+import Login from './pages/Login/Login';
+import ProtectedRoute from './Protected';
+import { AuthProvider } from './context/AuthContext';
+import { ImageProvider } from './context/ImageContext';
+import SavedImages from './pages/SavedImages/SavedImages';
+import { useAuth } from './context/AuthContext';
 
-function App() {
+const App: React.FC = () => {
   const location = useLocation();
-  const [cartItems, setCartItems] = useState<Image[]>([])
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
-  const addToCart = useCallback((image: Image) => {
-    setCartItems([...cartItems, image]);
-  }, [cartItems]);
-  const removeFromCart = useCallback((ids: number[]) => {
-    setCartItems(cartItems.filter((item) => !ids.includes(item.id)));
-  }, [cartItems]);
   return (
-  <Container>
-   <div className='App'>
-    <Header  cartItems={cartItems} setIsCartOpen={setIsCartOpen}/>
-    <AnimatePresence exitBeforeEnter>
-        {isCartOpen && (
-          <Cart
-            cartItems={cartItems}
-            setIsCartOpen={setIsCartOpen}
-            removeFromCart={removeFromCart}
-          />
-        )}
-      </AnimatePresence>
-
-    <Routes location={location} key={location.pathname}>
-      <Route path='*' element={<NotFound/>}/>
-
-      <Route
-            path='/'
-            element={<Navigate to='/images' replace />}
-          />
-
-      <Route path="images">
-            <Route
-              index
+    <AuthProvider>
+      <ImageProvider>
+        <div className='App'>
+          {isAuthenticated() && (
+             <Header />
+          )}
+              
+          <Routes location={location} key={location.pathname}>
+            <Route path='/login' element={<Login />} />
+            <Route path="/" element={<Navigate to="/images" replace />} />
+            <Route path="*" element={<NotFound />} />
+            <Route 
+              path="/images" 
               element={
-                <ImageList
-                  
-                  cartItems={cartItems}
-                  addToCart={addToCart}
-                />
+                <ProtectedRoute>
+                  <ImageList />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/images/:ImageId" 
+              element={
+                <ProtectedRoute>
+                  <ImageDetails />
+                </ProtectedRoute>
               }
             />
-            <Route
-              path=":ImageId"
+            <Route 
+              path="/saved-images" 
               element={
-                <ImageDetails
-                  cartItems={cartItems}
-                  addToCart={addToCart}
-                />
-              }
+                <ProtectedRoute>
+                  <SavedImages />
+                </ProtectedRoute>
+              } 
             />
-            
-          </Route>
-        
-    </Routes>
-  </div>
-  </Container>
-  )
-}
+          </Routes>
+        </div>
+      </ImageProvider>
+    </AuthProvider>
+  );
+};
 
-export default App
+export default App;

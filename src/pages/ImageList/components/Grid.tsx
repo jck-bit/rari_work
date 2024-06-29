@@ -1,18 +1,17 @@
-import { memo } from 'react';
+import React, { memo } from 'react';
 import { Transition } from '../../../components';
 import GameCard from './GameCard';
 import { Image } from '../../../types/Image.types';
 
 interface Props {
   images: Image[],
-  cartItems: Image[];
-  addToCart: (image: Image) => void;
-  columnsCount: number;
-  handleDeleteImage: (id: number) => void; // Add this prop
+  columnsCount: number,
+  handleDeleteImage: (id: number) => void;
+  handleSaveImage: (id: number) => void; // Add handleSaveImage prop
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-function Grid({ images, cartItems, addToCart, columnsCount, handleDeleteImage }: Props) {
+const Grid: React.FC<Props> = ({ images, columnsCount, handleDeleteImage, handleSaveImage }) => {
   const imagesPerColumn = Math.ceil(images.length / columnsCount);
   const columns = Array(columnsCount).fill(null).map((_, index) => {
     const imagesToDisplay = [];
@@ -34,9 +33,8 @@ function Grid({ images, cartItems, addToCart, columnsCount, handleDeleteImage }:
               <GameCard
                 key={image.id}
                 image={image}
-                cartItems={cartItems}
-                addToCart={addToCart}
-                handleDeleteImage={handleDeleteImage} // Pass this prop
+                handleDeleteImage={handleDeleteImage}
+                handleSaveImage={handleSaveImage} // Pass handleSaveImage to GameCard
               />
             ))}
           </div>
@@ -44,7 +42,7 @@ function Grid({ images, cartItems, addToCart, columnsCount, handleDeleteImage }:
       </>
     </Transition>
   );
-}
+};
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default memo(Grid);

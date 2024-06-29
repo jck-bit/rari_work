@@ -6,9 +6,12 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 import './scss/index.scss';
 import './fonts/GTWalsheimPro/stylesheet.css';
 import { ImageProvider } from './context/ImageContext.tsx';
+import { AuthProvider } from './context/AuthContext.tsx';
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
+    <AuthProvider>
    <ImageProvider>
     <HashRouter>
     <Routes>
@@ -16,5 +19,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </Routes>
     </HashRouter>
   </ImageProvider>
+  </AuthProvider>
   </React.StrictMode>,
 )

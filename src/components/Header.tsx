@@ -4,32 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import Transition from './Transition';
 import Button from './Button';
-import { Image } from '../types/Image.types';
 
-import {
-  addScrollableSelector,
-  disablePageScroll,
-} from 'scroll-lock';
 
-import {
-  RiShoppingBag2Line,
-} from 'react-icons/ri';
-
-interface Props {
-  cartItems: Image[],
-  setIsCartOpen: (isCartOpen: boolean) => void,
-}
 
 // eslint-disable-next-line react-refresh/only-export-components
-function Header(props: Props) {
-  const { cartItems, setIsCartOpen } = props;
+function Header() {
+  
   const navigate = useNavigate();
   const navigateToHome = () => navigate('/');
-  const openCart = () => {
-    setIsCartOpen(true);
-    addScrollableSelector('.Items');
-    disablePageScroll();
-  };
+  const navigateToSavedImages = () => navigate('/saved-images')
+
 
 return (
     <Headroom upTolerance={1}>
@@ -47,12 +31,11 @@ return (
         <SearchBar />
         <Button
           className="Cart"
-          handleClick={openCart}
+          handleClick={navigateToSavedImages}
         >
-          <RiShoppingBag2Line />
-          Images
-          <div>{cartItems.length}</div>
-        </Button>
+         
+          My Images
+        </Button>        
       </Transition>
     </Headroom>
   );

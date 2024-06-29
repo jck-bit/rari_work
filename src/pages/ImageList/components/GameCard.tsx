@@ -1,23 +1,40 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BackgroundImage } from 'react-image-and-background-image-fade';
-import { RiAddLine, RiCheckLine, RiDeleteBin2Fill } from 'react-icons/ri';
+import { RiAddLine, RiCheckLine, RiDeleteBin2Fill, RiLoader4Line } from 'react-icons/ri'; // Added RiLoader4Line icon
 import { Transition, Button } from '../../../components';
 import { useNavigate } from 'react-router-dom';
 import { Image } from '../../../types/Image.types';
+import { useImages } from '../../../context/ImageContext';
 
 interface Props {
   image: Image;
-  cartItems: Image[];
-  addToCart: (image: Image) => void;
-  handleDeleteImage: (id: number) => void; // Add this prop
+  handleDeleteImage: (id: number) => void;
+  handleSaveImage: (id: number) => void;
 }
 
-const GameCard: React.FC<Props> = ({ image, cartItems, addToCart, handleDeleteImage }) => {
+const GameCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage }) => {
   const { id, image_url } = image;
   const [, setIsHovered] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
   const navigateToGame = () => navigate(`/images/${id}`);
+  const { savedImages } = useImages();
+
+  const isSaved = savedImages.some(savedImage => savedImage.id === id);
+
+  const handleDeleteClick = async (id: number) => {
+    setIsDeleting(true);
+    await handleDeleteImage(id);
+    setIsDeleting(false);
+  };
+
+  const handleSaveClick = async (id: number) => {
+    setIsSaving(true);
+    await handleSaveImage(id);
+    setIsSaving(false);
+  };
 
   return (
     <div className="GameCard">
@@ -40,21 +57,32 @@ const GameCard: React.FC<Props> = ({ image, cartItems, addToCart, handleDeleteIm
         onHoverEnd={() => setIsHovered(false)}
       >
         <div className="Price">
-          {cartItems.find((item) => item.id === id)
-            ? <Transition className="Added">Saved <RiCheckLine /></Transition>
-            : <Button handleClick={() => addToCart(image)}>
+          {isSaved ? (
+            <Transition className="Added">Saved <RiCheckLine /></Transition>
+          ) : isSaving ? (
+            <Button>
+              Saving <RiLoader4Line className="spin" />
+            </Button>
+          ) : (
+            <Button handleClick={() => handleSaveClick(id)}>
               Save Image <RiAddLine />
             </Button>
-          }
+          )}
           <div className='Delete'>
-            <Button type="button" className='Delete' handleClick={() => handleDeleteImage(id)}>
-              Delete Image <RiDeleteBin2Fill />
-            </Button>
+            {isDeleting ? (
+              <Button type="button" className='Delete'>
+                Deleting <RiLoader4Line className="spin" />
+              </Button>
+            ) : (
+              <Button type="button" className='Delete' handleClick={() => handleDeleteClick(id)}>
+                Delete Image <RiDeleteBin2Fill />
+              </Button>
+            )}
           </div>
         </div>
       </motion.div>
     </div>
   );
-}
+};
 
 export default GameCard;

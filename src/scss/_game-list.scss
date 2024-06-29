@@ -69,6 +69,15 @@ $grid-gap: clamp(15px, 2.5vw, 25px);
         weight: 500;
       }
 
+      .spin{
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
       .Button {
         color: colors.$text2;
 
