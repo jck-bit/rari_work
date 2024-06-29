@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BackgroundImage } from 'react-image-and-background-image-fade';
-import { RiAddLine, RiCheckLine, RiDeleteBin2Fill, RiLoader4Line } from 'react-icons/ri'; // Added RiLoader4Line icon
+import { RiAddLine, RiCheckLine, RiDeleteBin4Fill , RiDownload2Fill, RiLoader4Line } from 'react-icons/ri'; // Added RiLoader4Line icon
 import { Transition, Button } from '../../../components';
 import { useNavigate } from 'react-router-dom';
 import { Image } from '../../../types/Image.types';
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const GameCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage }) => {
-  const { id, image_url } = image;
+  const { id, image_url,name } = image;
   const [, setIsHovered] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -23,6 +23,16 @@ const GameCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage }
   const { savedImages } = useImages();
 
   const isSaved = savedImages.some(savedImage => savedImage.id === id);
+
+  const handleDownloadImage = () => {
+    const link = document.createElement('a');
+    link.href = image_url;
+    link.download = name || 'download';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
 
   const handleDeleteClick = async (id: number) => {
     setIsDeleting(true);
@@ -75,10 +85,14 @@ const GameCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage }
               </Button>
             ) : (
               <Button type="button" className='Delete' handleClick={() => handleDeleteClick(id)}>
-                Delete Image <RiDeleteBin2Fill />
+                Delete Image <RiDeleteBin4Fill  />
               </Button>
+              
             )}
           </div>
+          <Button type="button" className='Download' handleClick={handleDownloadImage}>
+            <RiDownload2Fill />
+          </Button>
         </div>
       </motion.div>
     </div>
