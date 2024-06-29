@@ -1,18 +1,18 @@
-import { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { useIsPresent } from 'framer-motion';
 import { useScrollTo } from 'framer-motion-scroll-to-hook';
 import { useWindowWidth } from '@react-hook/window-size';
 import { Transition, Loading } from '../../components';
-import Grid from './components/Grid';
+import Grid from '../ImageList/components/Grid';
 import NavBar from '../../components/Navbar';
 import { useImages } from '../../context/ImageContext';
 
 const minCardWidth = 330;
 let scrollY = 0;
 
-function ImageList() {
-  const { images, deleteImage, saveImageToSaved } = useImages(); // Get images, deleteImage, and saveImageToSaved from context
+const SavedImages: React.FC = () => {
+  const { savedImages, fetchSavedImages, deleteImage, saveImageToSaved } = useImages();
   const [columnsCount, setColumnsCount] = useState(1);
   const windowWidth = useWindowWidth();
   const [searchParams] = useSearchParams();
@@ -30,28 +30,30 @@ function ImageList() {
     }
   }, [isPresent]);
 
+  useEffect(() => {
+    fetchSavedImages();
+  }, [fetchSavedImages]);
+
   const handleDeleteImage = useCallback(
     async (id: number) => {
-      scrollY = window.scrollY;
+      const currentScrollY = window.scrollY;  
       await deleteImage(id);
-      // Scroll to the saved position after deleting the image
-      window.scrollTo(0, scrollY);
+      window.scrollTo(0, currentScrollY);
     },
     [deleteImage]
   );
 
   const handleSaveImage = useCallback(
     async (id: number) => {
-      scrollY = window.scrollY;
+      const currentScrollY = window.scrollY; 
       await saveImageToSaved(id);
-      // Scroll to the saved position after saving the image
-      window.scrollTo(0, scrollY);
+      window.scrollTo(0, currentScrollY);
     },
     [saveImageToSaved]
   );
 
   useEffect(() => {
-    if (location.pathname === '/images') {
+    if (location.pathname === '/save-images') {
       if (location.search) {
         scrollY = window.scrollY;
         scrollTo();
@@ -61,10 +63,7 @@ function ImageList() {
     }
   }, [location, scrollTo]);
 
-  // Additional useEffect to restore scroll position after state changes
-  useEffect(() => {
-    window.scrollTo(0, scrollY);
-  }, [images]);
+
 
   return (
     <Transition className="GameList" direction="right">
@@ -72,19 +71,18 @@ function ImageList() {
         showStoreButton={!!location.search}
         title={searchParams.get('search') || ''}
       />
-      {images
-        ? images.length
-          ? <Grid
-              images={images}
-              columnsCount={columnsCount}
-              handleDeleteImage={handleDeleteImage}
-              handleSaveImage={handleSaveImage} 
-            />
-          : <Transition className="NoGames">No Images found.</Transition>
-        : <Loading />
-      }
+      {savedImages.length ? (
+        <Grid
+          images={savedImages}
+          columnsCount={columnsCount}
+          handleDeleteImage={handleDeleteImage}
+          handleSaveImage={handleSaveImage} // Pass handleSaveImage to Grid
+        />
+      ) : (
+        <Loading />
+      )}
     </Transition>
   );
-}
+};
 
-export default ImageList;
+export default SavedImages;

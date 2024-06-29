@@ -22,8 +22,8 @@
   width: 100%;
   padding: 20px clamp(10px, 3vw, 50px);
   display: grid;
-  grid-template-columns: 1fr 50fr 1fr;
-  gap: 10px;
+  grid-template-columns: 2fr 30fr 1fr;
+  gap: 5px;
   background-color: colors.$bg;
 
   .Logo {

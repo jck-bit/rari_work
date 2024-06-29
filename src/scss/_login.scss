@@ -11,6 +11,13 @@
     display: flex;
     align-items: stretch;
 
+    .left{
+        h1{
+            color: colors.$text;
+            margin-bottom: 10px;
+        }
+    }
+
     input {
         width: 300px;
         padding: 12px 16px;
@@ -29,6 +36,7 @@
             background-color: colors.$bg4;
             color: white;
         }
+        
     }
 }
 
