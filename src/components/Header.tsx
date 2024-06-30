@@ -31,8 +31,7 @@ return (
           className="Cart"
           handleClick={navigateToSavedImages}
         >
-         
-          My Images
+          Images
         </Button>        
       </Transition>
     </Headroom>
