@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams} from 'react-router-dom';
 import { useIsPresent } from 'framer-motion';
 import { useScrollTo } from 'framer-motion-scroll-to-hook';
 import { useWindowWidth } from '@react-hook/window-size';
@@ -12,13 +12,19 @@ const minCardWidth = 330;
 let scrollY = 0;
 
 function ImageList() {
-  const { images, deleteImage, saveImageToSaved } = useImages(); // Get images, deleteImage, and saveImageToSaved from context
+  const { images, deleteImage, saveImageToSaved, setImages } = useImages();
   const [columnsCount, setColumnsCount] = useState(1);
   const windowWidth = useWindowWidth();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const scrollTo = useScrollTo();
   const isPresent = useIsPresent();
+  
+
+  const initialPage = parseInt(searchParams.get('page') || '1', 10);
+  const initialLimit = parseInt(searchParams.get('limit') || '20', 10);
+  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [imagesPerPage, setImagesPerPage] = useState(initialLimit);
 
   useEffect(() => {
     setColumnsCount(Math.floor(windowWidth / minCardWidth) || 1);
@@ -34,7 +40,6 @@ function ImageList() {
     async (id: number) => {
       scrollY = window.scrollY;
       await deleteImage(id);
-      // Scroll to the saved position after deleting the image
       window.scrollTo(0, scrollY);
     },
     [deleteImage]
@@ -44,7 +49,6 @@ function ImageList() {
     async (id: number) => {
       scrollY = window.scrollY;
       await saveImageToSaved(id);
-      // Scroll to the saved position after saving the image
       window.scrollTo(0, scrollY);
     },
     [saveImageToSaved]
@@ -61,10 +65,49 @@ function ImageList() {
     }
   }, [location, scrollTo]);
 
-  // Additional useEffect to restore scroll position after state changes
   useEffect(() => {
     window.scrollTo(0, scrollY);
   }, [images]);
+
+  const fetchImages = useCallback(async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/images?page=${currentPage}&limit=${imagesPerPage}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      const data = await response.json();
+      setImages(data);
+    } catch (error) {
+      console.error('Error fetching images:', error);
+    }
+  }, [currentPage, imagesPerPage, setImages]);
+
+  useEffect(() => {
+    fetchImages();
+  }, [fetchImages]);
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => {
+      const nextPage = prevPage + 1;
+      setSearchParams({ page: nextPage.toString(), limit: imagesPerPage.toString() });
+      return nextPage;
+    });
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prevpage) => {
+      const prevPage = Math.max(prevpage - 1, 1);
+      setSearchParams({ page: prevPage.toString(), limit: imagesPerPage.toString() });
+      return prevPage;
+    });
+  };
+
+  const handleImagesPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const limit = parseInt(e.target.value, 10);
+    setImagesPerPage(limit);
+    setSearchParams({ page: currentPage.toString(), limit: limit.toString() });
+  };
 
   return (
     <Transition className="GameList" direction="right">
@@ -72,13 +115,23 @@ function ImageList() {
         showStoreButton={!!location.search}
         title={searchParams.get('search') || ''}
       />
+      <div className="pagination-controls">
+        <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</button>
+        <span>Page {currentPage}</span>
+        <button onClick={handleNextPage}>Next</button>
+        <select value={imagesPerPage} onChange={handleImagesPerPageChange}>
+          <option value={20}>20</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
+        </select>
+      </div>
       {images
         ? images.length
           ? <Grid
               images={images}
               columnsCount={columnsCount}
               handleDeleteImage={handleDeleteImage}
-              handleSaveImage={handleSaveImage} 
+              handleSaveImage={handleSaveImage}
             />
           : <Transition className="NoGames">No Images found.</Transition>
         : <Loading />

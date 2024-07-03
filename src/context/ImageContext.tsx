@@ -9,6 +9,7 @@ interface ImageContextProps {
   saveImageToSaved: (image_id: number) => Promise<void>;
   deleteImage: (id: number) => void;
   fetchImageById: (id: number) => Promise<Image | undefined>;
+  setImages: (images: Image[]) => void; 
 }
 
 const ImageContext = createContext<ImageContextProps | undefined>(undefined);
@@ -110,7 +111,7 @@ export const ImageProvider: React.FC<ImageProviderProps> = ({ children }) => {
   };
 
   return (
-    <ImageContext.Provider value={{ images, savedImages, fetchSavedImages,fetchImageById , saveImageToSaved, deleteImage }}>
+    <ImageContext.Provider value={{ images, savedImages, fetchSavedImages,fetchImageById , saveImageToSaved, deleteImage, setImages }}>
       {children}
     </ImageContext.Provider>
   );
