@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  //baseURL: 'https://rari-express.vercel.app',
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://rari-express.vercel.app',
+ // baseURL: 'http://localhost:3000',
 });
 
 api.interceptors.request.use((config) => {
