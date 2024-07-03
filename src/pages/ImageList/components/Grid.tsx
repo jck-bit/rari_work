@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { Transition } from '../../../components';
-import GameCard from './GameCard';
+import GameCard from './ImageCard';
 import { Image } from '../../../types/Image.types';
 
 interface Props {

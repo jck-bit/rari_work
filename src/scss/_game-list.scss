@@ -76,11 +76,10 @@ $grid-gap: clamp(15px, 2.5vw, 25px);
     height: 350px;
     cursor: pointer;
     object-fit: cover;
-
   }
 
   .Info {
-    padding: 18px 5px 20px;
+    padding: 18px 20px 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -94,10 +93,9 @@ $grid-gap: clamp(15px, 2.5vw, 25px);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      
 
       font: {
-        size: 12px;
+        size: 14px;
         weight: 500;
       }
 
@@ -112,6 +110,10 @@ $grid-gap: clamp(15px, 2.5vw, 25px);
 
       .Button {
         color: colors.$text2;
+        height: 40px; // Ensure consistent height
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         &:hover {
           color: colors.$accent;
@@ -125,49 +127,36 @@ $grid-gap: clamp(15px, 2.5vw, 25px);
         font-size: 16px;
         color: lightgreen;
         user-select: none;
+        height: 40px; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
-      .Delete .Button {
-        color: colors.$text2;
-        
-        &:hover {
-          color: colors.$delete;
-        }
-      }
-    }
-
-    .Actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px; // Add space between buttons
-
-      .Button {
-        padding: 5px 10px;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        background-color: colors.$bg3;
-        color: colors.$text;
-
-        &:hover {
-          background-color: colors.$bg4;
-          color: colors.$accent;
-        }
-
-        &.Download {
+      .Delete {
+        .Button {
           color: colors.$text2;
-
-          &:hover {
-            color: colors.$accent;
-          }
-        }
-
-        &.Delete {
-          color: colors.$text2;
+          height: 40px; 
+          display: flex;
+          align-items: center;
+          justify-content: center;
 
           &:hover {
             color: colors.$delete;
+          }
+        }
+      }
+
+      .Download {
+        .Button {
+          color: colors.$text2;
+          height: 40px; 
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &:hover {
+            color: colors.$accent;
           }
         }
       }
