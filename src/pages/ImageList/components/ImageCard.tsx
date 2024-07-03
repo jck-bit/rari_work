@@ -13,7 +13,7 @@ interface Props {
   handleSaveImage: (id: number) => void;
 }
 
-const GameCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage }) => {
+const ImageCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage }) => {
   const { id, image_url,name } = image;
   const [, setIsHovered] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -87,7 +87,6 @@ const GameCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage }
               <Button type="button" className='Delete' handleClick={() => handleDeleteClick(id)}>
                 Delete Image <RiDeleteBin4Fill  />
               </Button>
-              
             )}
           </div>
           <Button type="button" className='Download' handleClick={handleDownloadImage}>
@@ -99,4 +98,4 @@ const GameCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage }
   );
 };
 
-export default GameCard;
+export default ImageCard;
