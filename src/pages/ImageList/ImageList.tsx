@@ -71,7 +71,7 @@ function ImageList() {
 
   const fetchImages = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:3000/images?page=${currentPage}&limit=${imagesPerPage}`, {
+      const response = await fetch(`https://rari-express.vercel.app/images?page=${currentPage}&limit=${imagesPerPage}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
