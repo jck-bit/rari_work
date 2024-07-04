@@ -1,17 +1,21 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { Transition } from '../../../components';
-import GameCard from './ImageCard';
+import ImageCard from './ImageCard';
 import { Image } from '../../../types/Image.types';
 
 interface Props {
   images: Image[],
   columnsCount: number,
-  handleDeleteImage: (id: number) => void;
-  handleSaveImage: (id: number) => void; // Add handleSaveImage prop
+  handleDeleteImage: (id: number) => void,
+  handleSaveImage: (id: number) => void,
+  handleSelectImage: (id: number) => void,
+  selectedImages: number[],
+  selectionMode: boolean,
+  handleLongPress: () => void,
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-const Grid: React.FC<Props> = ({ images, columnsCount, handleDeleteImage, handleSaveImage }) => {
+const Grid: React.FC<Props> = ({ images, columnsCount, handleDeleteImage, handleSaveImage, handleSelectImage, selectedImages, selectionMode, handleLongPress }) => {
   const imagesPerColumn = Math.ceil(images.length / columnsCount);
   const columns = Array(columnsCount).fill(null).map((_, index) => {
     const imagesToDisplay = [];
@@ -30,11 +34,15 @@ const Grid: React.FC<Props> = ({ images, columnsCount, handleDeleteImage, handle
         {columns.map((column, index) => (
           <div key={`column-${index}`} className="Column">
             {column.map((image) => (
-              <GameCard
+              <ImageCard
                 key={image.id}
                 image={image}
                 handleDeleteImage={handleDeleteImage}
-                handleSaveImage={handleSaveImage} // Pass handleSaveImage to GameCard
+                handleSaveImage={handleSaveImage}
+                handleSelectImage={handleSelectImage}
+                isSelected={selectedImages.includes(image.id)}
+                selectionMode={selectionMode}
+                handleLongPress={handleLongPress}
               />
             ))}
           </div>
@@ -42,7 +50,7 @@ const Grid: React.FC<Props> = ({ images, columnsCount, handleDeleteImage, handle
       </>
     </Transition>
   );
-};
+}
 
 // eslint-disable-next-line react-refresh/only-export-components
-export default memo(Grid);
+export default React.memo(Grid);

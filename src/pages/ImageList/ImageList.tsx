@@ -1,30 +1,31 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useLocation, useSearchParams} from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { useIsPresent } from 'framer-motion';
-import { useScrollTo } from 'framer-motion-scroll-to-hook';
 import { useWindowWidth } from '@react-hook/window-size';
 import { Transition, Loading } from '../../components';
 import Grid from './components/Grid';
 import NavBar from '../../components/Navbar';
 import { useImages } from '../../context/ImageContext';
+import { Button } from 'react-bootstrap';
 
 const minCardWidth = 330;
 let scrollY = 0;
 
 function ImageList() {
-  const { images, deleteImage, saveImageToSaved, setImages } = useImages();
+  const { images, deleteImage, saveImageToSaved, fetchImages } = useImages();
   const [columnsCount, setColumnsCount] = useState(1);
   const windowWidth = useWindowWidth();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
-  const scrollTo = useScrollTo();
   const isPresent = useIsPresent();
-  
 
   const initialPage = parseInt(searchParams.get('page') || '1', 10);
   const initialLimit = parseInt(searchParams.get('limit') || '20', 10);
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [imagesPerPage, setImagesPerPage] = useState(initialLimit);
+
+  const [selectedImages, setSelectedImages] = useState<number[]>([]);
+  const [selectionMode, setSelectionMode] = useState(false);
 
   useEffect(() => {
     setColumnsCount(Math.floor(windowWidth / minCardWidth) || 1);
@@ -36,56 +37,9 @@ function ImageList() {
     }
   }, [isPresent]);
 
-  const handleDeleteImage = useCallback(
-    async (id: number) => {
-      scrollY = window.scrollY;
-      await deleteImage(id);
-      window.scrollTo(0, scrollY);
-    },
-    [deleteImage]
-  );
-
-  const handleSaveImage = useCallback(
-    async (id: number) => {
-      scrollY = window.scrollY;
-      await saveImageToSaved(id);
-      window.scrollTo(0, scrollY);
-    },
-    [saveImageToSaved]
-  );
-
   useEffect(() => {
-    if (location.pathname === '/images') {
-      if (location.search) {
-        scrollY = window.scrollY;
-        scrollTo();
-      } else {
-        scrollTo(scrollY);
-      }
-    }
-  }, [location, scrollTo]);
-
-  useEffect(() => {
-    window.scrollTo(0, scrollY);
-  }, [images]);
-
-  const fetchImages = useCallback(async () => {
-    try {
-      const response = await fetch(`https://rari-express.vercel.app/images?page=${currentPage}&limit=${imagesPerPage}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      const data = await response.json();
-      setImages(data);
-    } catch (error) {
-      console.error('Error fetching images:', error);
-    }
-  }, [currentPage, imagesPerPage, setImages]);
-
-  useEffect(() => {
-    fetchImages();
-  }, [fetchImages]);
+    fetchImages(currentPage, imagesPerPage);
+  }, [currentPage, imagesPerPage, fetchImages]);
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => {
@@ -109,6 +63,51 @@ function ImageList() {
     setSearchParams({ page: currentPage.toString(), limit: limit.toString() });
   };
 
+  const handleDeleteImage = useCallback(async (id: number) => {
+    scrollY = window.scrollY;
+    await deleteImage(id);
+    window.scrollTo(0, scrollY);
+  }, [deleteImage]);
+
+  const handleSaveImage = useCallback(async (id: number) => {
+    scrollY = window.scrollY;
+    await saveImageToSaved(id);
+    window.scrollTo(0, scrollY);
+  }, [saveImageToSaved]);
+
+  const handleDeleteSelectedImages = useCallback(async () => {
+    scrollY = window.scrollY;
+    await Promise.all(selectedImages.map(id => deleteImage(id)));
+    setSelectedImages([]);
+    setSelectionMode(false);
+    window.scrollTo(0, scrollY);
+  }, [selectedImages, deleteImage]);
+
+  const handleSaveSelectedImages = useCallback(async () => {
+    scrollY = window.scrollY;
+    await Promise.all(selectedImages.map(id => saveImageToSaved(id)));
+    setSelectedImages([]);
+    setSelectionMode(false);
+    window.scrollTo(0, scrollY);
+  }, [selectedImages, saveImageToSaved]);
+
+  const handleSelectImage = useCallback((id: number) => {
+    setSelectedImages(prevSelected =>
+      prevSelected.includes(id)
+        ? prevSelected.filter(selectedId => selectedId !== id)
+        : [...prevSelected, id]
+    );
+  }, []);
+
+  const handleLongPress = useCallback(() => {
+    setSelectionMode(true);
+  }, []);
+
+  const handleCancelSelection = () => {
+    setSelectedImages([]);
+    setSelectionMode(false);
+  };
+
   return (
     <Transition className="GameList" direction="right">
       <NavBar
@@ -125,6 +124,21 @@ function ImageList() {
           <option value={100}>100</option>
         </select>
       </div>
+
+      {selectionMode && (
+        <div className="BulkActions">
+          
+          <Button className='save-image' onClick={handleCancelSelection}>
+            Cancel
+          </Button>
+          <Button className='save-image' onClick={handleSaveSelectedImages}>
+            Save  images
+          </Button>
+          <Button className='delete-me' onClick={handleDeleteSelectedImages}>
+            Delete images
+          </Button>
+        </div>
+      )}
       {images
         ? images.length
           ? <Grid
@@ -132,6 +146,10 @@ function ImageList() {
               columnsCount={columnsCount}
               handleDeleteImage={handleDeleteImage}
               handleSaveImage={handleSaveImage}
+              handleSelectImage={handleSelectImage}
+              selectedImages={selectedImages}
+              selectionMode={selectionMode}
+              handleLongPress={handleLongPress}
             />
           : <Transition className="NoGames">No Images found.</Transition>
         : <Loading />
