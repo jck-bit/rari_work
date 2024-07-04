@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { Image } from '../types/Image.types';
 import api from '../api';
 
@@ -7,9 +7,9 @@ interface ImageContextProps {
   savedImages: Image[];
   fetchSavedImages: () => Promise<void>;
   saveImageToSaved: (image_id: number) => Promise<void>;
-  deleteImage: (id: number) => void;
+  deleteImage: (id: number) => Promise<void>;
   fetchImageById: (id: number) => Promise<Image | undefined>;
-  setImages: (images: Image[]) => void; 
+  fetchImages: (page: number, limit: number) => Promise<void>;
 }
 
 const ImageContext = createContext<ImageContextProps | undefined>(undefined);
@@ -30,6 +30,19 @@ interface ImageProviderProps {
 export const ImageProvider: React.FC<ImageProviderProps> = ({ children }) => {
   const [images, setImages] = useState<Image[]>([]);
   const [savedImages, setSavedImages] = useState<Image[]>([]);
+
+  const fetchImages = useCallback(async (page: number, limit: number) => {
+    try {
+      const response = await api.get(`/images?page=${page}&limit=${limit}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      setImages(response.data);
+    } catch (error) {
+      console.error('Error fetching images:', error);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -111,7 +124,7 @@ export const ImageProvider: React.FC<ImageProviderProps> = ({ children }) => {
   };
 
   return (
-    <ImageContext.Provider value={{ images, savedImages, fetchSavedImages,fetchImageById , saveImageToSaved, deleteImage, setImages }}>
+    <ImageContext.Provider value={{ images, savedImages, fetchSavedImages, fetchImageById, saveImageToSaved, deleteImage, fetchImages }}>
       {children}
     </ImageContext.Provider>
   );

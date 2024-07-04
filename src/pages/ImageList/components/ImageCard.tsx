@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BackgroundImage } from 'react-image-and-background-image-fade';
-import { RiAddLine, RiCheckLine, RiDeleteBin4Fill , RiDownload2Fill, RiLoader4Line } from 'react-icons/ri'; // Added RiLoader4Line icon
+import { RiAddLine, RiCheckLine, RiDeleteBin4Fill, RiDownload2Fill, RiLoader4Line } from 'react-icons/ri';
 import { Transition, Button } from '../../../components';
 import { useNavigate } from 'react-router-dom';
 import { Image } from '../../../types/Image.types';
@@ -11,13 +11,20 @@ interface Props {
   image: Image;
   handleDeleteImage: (id: number) => void;
   handleSaveImage: (id: number) => void;
+  handleSelectImage: (id: number) => void;
+  isSelected: boolean;
+  selectionMode: boolean;
+  handleLongPress: () => void;
 }
 
-const ImageCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage }) => {
-  const { id, image_url,name } = image;
+const LONG_PRESS_DURATION = 500; 
+
+const ImageCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage, handleSelectImage, isSelected, selectionMode, handleLongPress }) => {
+  const { id, image_url, name } = image;
   const [, setIsHovered] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [longPressTimeout, setLongPressTimeout] = useState<NodeJS.Timeout | null>(null);
   const navigate = useNavigate();
   const navigateToGame = () => navigate(`/images/${id}`);
   const { savedImages } = useImages();
@@ -33,7 +40,6 @@ const ImageCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage 
     document.body.removeChild(link);
   };
 
-
   const handleDeleteClick = async (id: number) => {
     setIsDeleting(true);
     await handleDeleteImage(id);
@@ -46,11 +52,43 @@ const ImageCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage 
     setIsSaving(false);
   };
 
+  const handleCheckboxChange = () => {
+    handleSelectImage(id);
+  };
+
+  const startLongPress = () => {
+    setLongPressTimeout(setTimeout(() => {
+      handleLongPress();
+    }, LONG_PRESS_DURATION));
+  };
+
+  const endLongPress = () => {
+    if (longPressTimeout) {
+      clearTimeout(longPressTimeout);
+      setLongPressTimeout(null);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (longPressTimeout) {
+        clearTimeout(longPressTimeout);
+      }
+    };
+  }, [longPressTimeout]);
+
   return (
-    <div className="GameCard">
+    <div 
+      className={`GameCard ${isSelected ? 'selected' : ''}`} // Add 'selected' class if the image is selected
+      onMouseDown={startLongPress}
+      onMouseUp={endLongPress}
+      onMouseLeave={endLongPress}
+      onTouchStart={startLongPress}
+      onTouchEnd={endLongPress}
+    >
       <motion.div
         className="Image"
-        onClick={navigateToGame}
+        onClick={selectionMode ? handleCheckboxChange : navigateToGame}
       >
         <BackgroundImage
           className="BackgroundImage"
