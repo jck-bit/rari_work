@@ -12,10 +12,21 @@ interface Props {
   selectedImages: number[],
   selectionMode: boolean,
   handleLongPress: () => void,
+  isSavedPage?: boolean; 
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-const Grid: React.FC<Props> = ({ images, columnsCount, handleDeleteImage, handleSaveImage, handleSelectImage, selectedImages, selectionMode, handleLongPress }) => {
+const Grid: React.FC<Props> = ({
+  images,
+  columnsCount,
+  handleDeleteImage,
+  handleSaveImage,
+  handleSelectImage,
+  selectedImages,
+  selectionMode,
+  handleLongPress,
+  isSavedPage = false, // Default value is false
+}) => {
   const imagesPerColumn = Math.ceil(images.length / columnsCount);
   const columns = Array(columnsCount).fill(null).map((_, index) => {
     const imagesToDisplay = [];
@@ -43,6 +54,7 @@ const Grid: React.FC<Props> = ({ images, columnsCount, handleDeleteImage, handle
                 isSelected={selectedImages.includes(image.id)}
                 selectionMode={selectionMode}
                 handleLongPress={handleLongPress}
+                isSavedPage={isSavedPage} // Pass the isSavedPage prop
               />
             ))}
           </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BackgroundImage } from 'react-image-and-background-image-fade';
-import { RiAddLine, RiCheckLine, RiDeleteBin4Fill, RiDownload2Fill, RiLoader4Line } from 'react-icons/ri';
+import { RiCheckLine, RiDeleteBin6Line , RiDownload2Fill, RiLoader4Line } from 'react-icons/ri'; 
 import { Transition, Button } from '../../../components';
 import { useNavigate } from 'react-router-dom';
 import { Image } from '../../../types/Image.types';
@@ -15,11 +15,21 @@ interface Props {
   isSelected: boolean;
   selectionMode: boolean;
   handleLongPress: () => void;
+  isSavedPage?: boolean; // New prop to indicate if it's the SavedImages page
 }
 
-const LONG_PRESS_DURATION = 500; 
+const LONG_PRESS_DURATION = 500; // Long press duration in milliseconds
 
-const ImageCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage, handleSelectImage, isSelected, selectionMode, handleLongPress }) => {
+const ImageCard: React.FC<Props> = ({
+  image,
+  handleDeleteImage,
+  handleSaveImage,
+  handleSelectImage,
+  isSelected,
+  selectionMode,
+  handleLongPress,
+  isSavedPage = false, // Default value is false
+}) => {
   const { id, image_url, name } = image;
   const [, setIsHovered] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -78,8 +88,8 @@ const ImageCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage,
   }, [longPressTimeout]);
 
   return (
-    <div 
-      className={`GameCard ${isSelected ? 'selected' : ''}`} // Add 'selected' class if the image is selected
+    <div
+      className={`GameCard ${isSelected ? 'selected' : ''}`}
       onMouseDown={startLongPress}
       onMouseUp={endLongPress}
       onMouseLeave={endLongPress}
@@ -105,16 +115,18 @@ const ImageCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage,
         onHoverEnd={() => setIsHovered(false)}
       >
         <div className="Price">
-          {isSaved ? (
-            <Transition className="Added">Saved <RiCheckLine /></Transition>
-          ) : isSaving ? (
-            <Button>
-              Saving <RiLoader4Line className="spin" />
-            </Button>
-          ) : (
-            <Button handleClick={() => handleSaveClick(id)}>
-              Save Image <RiAddLine />
-            </Button>
+          {!isSavedPage && ( 
+            isSaved ? (
+              <Transition className="Added">Saved <RiCheckLine /></Transition>
+            ) : isSaving ? (
+              <Button>
+                Saving <RiLoader4Line className="spin" />
+              </Button>
+            ) : (
+              <Button handleClick={() => handleSaveClick(id)}>
+                Save Image <RiCheckLine />
+              </Button>
+            )
           )}
           <div className='Delete'>
             {isDeleting ? (
@@ -123,7 +135,7 @@ const ImageCard: React.FC<Props> = ({ image, handleDeleteImage, handleSaveImage,
               </Button>
             ) : (
               <Button type="button" className='Delete' handleClick={() => handleDeleteClick(id)}>
-                Delete Image <RiDeleteBin4Fill  />
+                Delete Image <RiDeleteBin6Line  />
               </Button>
             )}
           </div>
