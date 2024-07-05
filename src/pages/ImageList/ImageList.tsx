@@ -6,7 +6,8 @@ import { Transition, Loading } from '../../components';
 import Grid from './components/Grid';
 import NavBar from '../../components/Navbar';
 import { useImages } from '../../context/ImageContext';
-import { Button } from 'react-bootstrap';
+import { RiCheckLine, RiDeleteBin6Line  } from 'react-icons/ri'; 
+import { MdCancel  } from "react-icons/md";
 
 const minCardWidth = 330;
 let scrollY = 0;
@@ -83,6 +84,8 @@ function ImageList() {
     window.scrollTo(0, scrollY);
   }, [selectedImages, deleteImage]);
 
+  const getSelectedImagesCount  = () => selectedImages.length;
+
   const handleSaveSelectedImages = useCallback(async () => {
     scrollY = window.scrollY;
     await Promise.all(selectedImages.map(id => saveImageToSaved(id)));
@@ -114,43 +117,49 @@ function ImageList() {
         showStoreButton={!!location.search}
         title={searchParams.get('search') || ''}
       />
-      <div className="pagination-controls">
-        <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</button>
-        <span>Page {currentPage}</span>
-        <button onClick={handleNextPage}>Next</button>
-        <select value={imagesPerPage} onChange={handleImagesPerPageChange}>
-          <option value={20}>20</option>
-          <option value={50}>50</option>
-          <option value={100}>100</option>
-        </select>
-      </div>
-
       {selectionMode && (
         <div className="BulkActions">
-          
-          <Button className='save-image' onClick={handleCancelSelection}>
-            Cancel
-          </Button>
-          <Button className='save-image' onClick={handleSaveSelectedImages}>
-            Save  images
-          </Button>
-          <Button className='delete-me' onClick={handleDeleteSelectedImages}>
-            Delete images
-          </Button>
+          <div className='cancel-selection' onClick={handleCancelSelection}>
+            <MdCancel  size={25} color='white' className='circle'/> 
+          </div>
+
+          <div className='selected-image'>
+             {getSelectedImagesCount()} selected
+          </div>
+
+          <div className='save-image' onClick={handleSaveSelectedImages}>
+             <RiCheckLine size={25} color='white' className='tick'/>
+          </div>
+
+          <div className='delete-me' onClick={handleDeleteSelectedImages}>
+            <RiDeleteBin6Line size={25} color='white' className='delete'/>
+          </div>
         </div>
       )}
       {images
         ? images.length
-          ? <Grid
-              images={images}
-              columnsCount={columnsCount}
-              handleDeleteImage={handleDeleteImage}
-              handleSaveImage={handleSaveImage}
-              handleSelectImage={handleSelectImage}
-              selectedImages={selectedImages}
-              selectionMode={selectionMode}
-              handleLongPress={handleLongPress}
-            />
+          ? <>
+              <Grid
+                images={images}
+                columnsCount={columnsCount}
+                handleDeleteImage={handleDeleteImage}
+                handleSaveImage={handleSaveImage}
+                handleSelectImage={handleSelectImage}
+                selectedImages={selectedImages}
+                selectionMode={selectionMode}
+                handleLongPress={handleLongPress}
+              />
+              <div className="pagination-controls">
+                <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</button>
+                <span>Page {currentPage}</span>
+                <button onClick={handleNextPage}>Next</button>
+                <select value={imagesPerPage} onChange={handleImagesPerPageChange}>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+              </div>
+            </>
           : <Transition className="NoGames">No Images found.</Transition>
         : <Loading />
       }

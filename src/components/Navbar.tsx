@@ -16,7 +16,7 @@ function NavBar(props: Props) {
 
   return (
     <nav className="NavBar">
-      {showStoreButton && (
+      {/* {showStoreButton && (
         <Transition direction="left">
           <Button
             className="Store"
@@ -25,7 +25,8 @@ function NavBar(props: Props) {
             <RiArrowLeftLine /> Home
           </Button>
         </Transition>
-      )}
+      )} */}
+      <></>
       {title && <motion.h2 layout>{title}</motion.h2>}
     </nav>
   );
