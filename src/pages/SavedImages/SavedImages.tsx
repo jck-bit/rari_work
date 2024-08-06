@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { useIsPresent } from 'framer-motion';
-import { useScrollTo } from 'framer-motion-scroll-to-hook';
 import { useWindowWidth } from '@react-hook/window-size';
 import { Transition, Loading } from '../../components';
 import Grid from '../ImageList/components/Grid';
 import NavBar from '../../components/Navbar';
 import { useImages } from '../../context/ImageContext';
-import { RiDeleteBin6Line  } from 'react-icons/ri'; 
-import { MdCancel  } from "react-icons/md";
+import { RiDeleteBin6Line, RiDownload2Fill } from 'react-icons/ri';
+import { MdCancel } from "react-icons/md";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 const minCardWidth = 330;
 let scrollY = 0;
@@ -19,9 +20,7 @@ const SavedImages: React.FC = () => {
   const windowWidth = useWindowWidth();
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const scrollTo = useScrollTo();
   const isPresent = useIsPresent();
-
   const [selectedImages, setSelectedImages] = useState<number[]>([]);
   const [selectionMode, setSelectionMode] = useState(false);
 
@@ -36,10 +35,19 @@ const SavedImages: React.FC = () => {
   }, [isPresent]);
 
   useEffect(() => {
-    scrollY = window.scrollY;
-      fetchSavedImages();
-    window.scrollTo(0, scrollY);
-  }, [fetchSavedImages]);
+    fetchSavedImages();
+  }, []);
+
+
+  useEffect(() => {
+    if (location.pathname === '/saved-images') {
+      if (location.search) {
+        window.scrollTo(0, scrollY);
+      } else {
+        window.scrollTo(0, scrollY);
+      }
+    }
+  }, [location]);
 
   const handleDeleteImage = useCallback(
     async (id: number) => {
@@ -65,23 +73,17 @@ const SavedImages: React.FC = () => {
     setSelectedImages([]);
     setSelectionMode(false);
     window.scrollTo(0, scrollY);
-  }, [selectedImages, deleteImage]);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleSaveSelectedImages = useCallback(async () => {
-    scrollY = window.scrollY;
-    await Promise.all(selectedImages.map(id => saveImageToSaved(id)));
-    setSelectedImages([]);
-    setSelectionMode(false);
-    window.scrollTo(0, scrollY);
-  }, [selectedImages, saveImageToSaved]);
+  }, [selectedImages, deleteImage]); 
 
   const handleSelectImage = useCallback((id: number) => {
     setSelectedImages(prevSelected =>
       prevSelected.includes(id)
+      
         ? prevSelected.filter(selectedId => selectedId !== id)
         : [...prevSelected, id]
+        
     );
+   
   }, []);
 
   const handleLongPress = useCallback(() => {
@@ -93,18 +95,29 @@ const SavedImages: React.FC = () => {
     setSelectionMode(false);
   };
 
-  useEffect(() => {
-    if (location.pathname === '/saved-images') {
-      if (location.search) {
-        scrollY = window.scrollY;
-        scrollTo();
-      } else {
-        scrollTo(scrollY);
-      }
-    }
-  }, [location, scrollTo]);
+ const handleDownloadSelectedImages  = () => {
+  const zip = new JSZip();
+  const folder = zip.folder("SelectedImages"); // Create a folder in the ZIP file
 
-  const getSelectedImagesCount  = () => selectedImages.length;
+  // Add selected images to the folder
+  selectedImages.forEach((id) => {
+    const photo = savedImages.find(img => img.id === id);
+    if (photo) {
+      const blobPromise = fetch(photo.image_url).then((res) => res.blob());
+      folder?.file(photo.name, blobPromise, { binary: true });
+    }
+  });
+
+  // Zip the folder and trigger download
+  zip.generateAsync({ type: "blob" }).then((blob) => {
+    saveAs(blob, "SelectedImages.zip");
+  });
+};
+
+  
+  
+
+  const getSelectedImagesCount = () => selectedImages.length;
 
   return (
     <Transition className="GameList" direction="right">
@@ -114,18 +127,22 @@ const SavedImages: React.FC = () => {
       />
       {selectionMode && (
         <div className="BulkActions">
-        <div className='cancel-selection' onClick={handleCancelSelection}>
-          <MdCancel  size={25} color='white' className='circle'/> 
-        </div>
-
-        <div className='selected-image'>
-           {getSelectedImagesCount()} selected
-        </div>
-
-        <div className='delete-me' onClick={handleDeleteSelectedImages}>
-            <RiDeleteBin6Line size={25} color='white' className='delete'/>
+          <div className='cancel-selection' onClick={handleCancelSelection}>
+            <MdCancel size={25} color='white' className='circle' />
           </div>
-      </div>
+
+          <div className='selected-image'>
+            {getSelectedImagesCount()} selected
+          </div>
+
+          <div className='delete-me' onClick={handleDeleteSelectedImages}>
+            <RiDeleteBin6Line size={25} color='white' className='delete' />
+          </div>
+
+          <div className='download-selected' onClick={handleDownloadSelectedImages}>
+            <RiDownload2Fill size={25} color='white' className='download' />
+          </div>
+        </div>
       )}
       {savedImages.length ? (
         <Grid
