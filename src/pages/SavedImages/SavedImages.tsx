@@ -119,9 +119,7 @@ const SavedImages: React.FC = () => {
     zip.generateAsync({ type: "blob" }).then((blob) => {
       saveAs(blob, "SelectedImages.zip");
       setIsLoading(false); 
-      setSelectedImages([]);
-      setSelectionMode(false);
-      
+      handleCancelSelection();
     });
   };
 
