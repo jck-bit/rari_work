@@ -23,6 +23,8 @@ const SavedImages: React.FC = () => {
   const isPresent = useIsPresent();
   const [selectedImages, setSelectedImages] = useState<number[]>([]);
   const [selectionMode, setSelectionMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect(() => {
     setColumnsCount(Math.floor(windowWidth / minCardWidth) || 1);
@@ -73,17 +75,17 @@ const SavedImages: React.FC = () => {
     setSelectedImages([]);
     setSelectionMode(false);
     window.scrollTo(0, scrollY);
-  }, [selectedImages, deleteImage]); 
+  }, [selectedImages, deleteImage]);
 
   const handleSelectImage = useCallback((id: number) => {
     setSelectedImages(prevSelected =>
       prevSelected.includes(id)
-      
+
         ? prevSelected.filter(selectedId => selectedId !== id)
         : [...prevSelected, id]
-        
+
     );
-   
+
   }, []);
 
   const handleLongPress = useCallback(() => {
@@ -95,27 +97,32 @@ const SavedImages: React.FC = () => {
     setSelectionMode(false);
   };
 
- const handleDownloadSelectedImages  = () => {
-  const zip = new JSZip();
-  const folder = zip.folder("SelectedImages"); // Create a folder in the ZIP file
+  const handleDownloadSelectedImages = async () => {
+    setIsLoading(true); // Start loading
 
-  // Add selected images to the folder
-  selectedImages.forEach((id) => {
-    const photo = savedImages.find(img => img.id === id);
-    if (photo) {
-      const blobPromise = fetch(photo.image_url).then((res) => res.blob());
-      folder?.file(photo.name, blobPromise, { binary: true });
-    }
-  });
+    const zip = new JSZip();
+    const folder = zip.folder("SelectedImages");
 
-  // Zip the folder and trigger download
-  zip.generateAsync({ type: "blob" }).then((blob) => {
-    saveAs(blob, "SelectedImages.zip");
-  });
-};
+    const imageFetches = selectedImages.map((id) => {
+      const photo = savedImages.find(img => img.id === id);
+      if (photo) {
+        return fetch(photo.image_url)
+          .then((res) => res.blob())
+          .then((blob) => folder?.file(photo.name, blob, { binary: true }));
+      }
+      return Promise.resolve();
+    });
 
-  
-  
+    await Promise.all(imageFetches);
+
+    
+    zip.generateAsync({ type: "blob" }).then((blob) => {
+      saveAs(blob, "SelectedImages.zip");
+      setSelectionMode(false);
+      setIsLoading(false); 
+      
+    });
+  };
 
   const getSelectedImagesCount = () => selectedImages.length;
 
@@ -139,8 +146,14 @@ const SavedImages: React.FC = () => {
             <RiDeleteBin6Line size={25} color='white' className='delete' />
           </div>
 
-          <div className='download-selected' onClick={handleDownloadSelectedImages}>
-            <RiDownload2Fill size={25} color='white' className='download' />
+          <div className='download-selected'>
+            {isLoading ? (
+              <p>Downloading...</p>
+            ) : (
+              <button onClick={handleDownloadSelectedImages} className='download-loader'>
+                <RiDownload2Fill size={25} color='white' className='download' />
+              </button>
+            )}
           </div>
         </div>
       )}
