@@ -98,7 +98,7 @@ const SavedImages: React.FC = () => {
   };
 
   const handleDownloadSelectedImages = async () => {
-    setIsLoading(true); // Start loading
+    setIsLoading(true); 
 
     const zip = new JSZip();
     const folder = zip.folder("SelectedImages");
@@ -114,12 +114,13 @@ const SavedImages: React.FC = () => {
     });
 
     await Promise.all(imageFetches);
-
+    
     
     zip.generateAsync({ type: "blob" }).then((blob) => {
       saveAs(blob, "SelectedImages.zip");
-      setSelectionMode(false);
       setIsLoading(false); 
+      setSelectedImages([]);
+      setSelectionMode(false);
       
     });
   };
