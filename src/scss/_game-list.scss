@@ -108,12 +108,28 @@ $grid-gap: clamp(15px, 2.5vw, 25px);
       padding: 7px 7px;
       border-radius: 50%;
 
+      p{
+        color: colors.$text;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        background-color: transparent;
+      }
+
       .download{
         background-color: transparent;
       }
-      &:hover{
-        background-color: hsl(0, 0%, 20%);
+      
+
+      .download-loader{
+        background-color: transparent;
+        width: 100%;
+
+
+        &:hover{
+          background-color: hsl(0, 0%, 20%);
+        }
       }
+
     }
 
 
