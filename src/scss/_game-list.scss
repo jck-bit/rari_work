@@ -97,6 +97,26 @@ $grid-gap: clamp(15px, 2.5vw, 25px);
         background-color: hsl(0, 0%, 20%);
       }
     }
+
+    .download-selected{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: transparent;
+      cursor: pointer;
+      margin-left: 10px;
+      padding: 7px 7px;
+      border-radius: 50%;
+
+      .download{
+        background-color: transparent;
+      }
+      &:hover{
+        background-color: hsl(0, 0%, 20%);
+      }
+    }
+
+
    
     button {
       background-color: #007bff;
@@ -109,6 +129,8 @@ $grid-gap: clamp(15px, 2.5vw, 25px);
 
     
     }
+
+
   }
 }
   .Grid {

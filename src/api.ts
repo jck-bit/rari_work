@@ -26,7 +26,3 @@ export const setUnauthorizedCallback = (logoutCallback: () => void) => {
 };
 
 export default api;
-
-
-
-

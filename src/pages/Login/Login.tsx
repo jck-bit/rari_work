@@ -24,7 +24,7 @@ const Login: React.FC = () => {
       await login(email, password);
       navigate('/images');
     } catch (error) {
-      console.error('Login error', error);
+    //  console.error('Login error', error);
       setIsLoading(false);
     }
   };
@@ -67,5 +67,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-
-

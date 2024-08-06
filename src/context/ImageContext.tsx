@@ -40,7 +40,7 @@ export const ImageProvider: React.FC<ImageProviderProps> = ({ children }) => {
       });
       setImages(response.data);
     } catch (error) {
-      console.error('Error fetching images:', error);
+    //  console.error('Error fetching images:', error);
     }
   }, []);
 
@@ -54,7 +54,7 @@ export const ImageProvider: React.FC<ImageProviderProps> = ({ children }) => {
         });
         setImages(response.data);
       } catch (error) {
-        console.error('Error fetching photos:', error);
+      //  console.error('Error fetching photos:', error);
       }
     };
 
@@ -70,7 +70,7 @@ export const ImageProvider: React.FC<ImageProviderProps> = ({ children }) => {
       });
       setSavedImages(response.data);
     } catch (error) {
-      console.error('Error fetching saved images:', error);
+    //  console.error('Error fetching saved images:', error);
     }
   };
 
@@ -88,7 +88,7 @@ export const ImageProvider: React.FC<ImageProviderProps> = ({ children }) => {
         }
       }
     } catch (error) {
-      console.error('Error saving image to saved images:', error);
+    //  console.error('Error saving image to saved images:', error);
     }
   };
 
@@ -101,7 +101,7 @@ export const ImageProvider: React.FC<ImageProviderProps> = ({ children }) => {
       });
       return response.data;
     } catch (error) {
-      console.error('Error fetching image by ID:', error);
+    //  console.error('Error fetching image by ID:', error);
     }
   };
 
@@ -116,10 +116,10 @@ export const ImageProvider: React.FC<ImageProviderProps> = ({ children }) => {
         setImages((prevImages) => prevImages.filter((image) => image.id !== id));
         setSavedImages((prevSavedImages) => prevSavedImages.filter((image) => image.id !== id));
       } else {
-        console.error('Failed to delete image');
+      //  console.error('Failed to delete image');
       }
     } catch (error) {
-      console.error('Error deleting image:', error);
+    //  console.error('Error deleting image:', error);
     }
   };
 
